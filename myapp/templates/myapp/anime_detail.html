@@ -1,9 +1,38 @@
-<h1>{{ anime.title }}</h1>
+{% extends 'myapp/base.html' %}
 
-<img src="/media/{{ anime.image_path }}" width="300">
+{% block content %}
+<div class="container section">
+  <div class="card" style="max-width: 900px; margin: 0 auto; padding: 2rem;">
+    <div class="text-center mb-4">
+      <h1 class="section-title">{{ anime.title }}</h1>
+    </div>
 
-<p>{{ anime.description }}</p>
+    <div style="display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center;">
+      <div style="flex: 1; min-width: 300px;">
+        <img src="/media/{{ anime.images.landscape }}" class="card-img"
+          style="height: auto; width: 100%; border-radius: 8px; box-shadow: 0 0 20px var(--primary-glow);">
+      </div>
 
-<p><strong>Genre:</strong> {{ anime.genre|title }}</p>
+      <div style="flex: 1; min-width: 300px; color: var(--text-main);">
+        <div class="mb-4">
+          <h3>Description</h3>
+          <p style="color: var(--text-muted); line-height: 1.6; margin-top: 0.5rem;">{{ anime.description }}</p>
+        </div>
 
-<a href="/">← Back to Home</a>
+        <div class="mb-4">
+          <h3>Genres</h3>
+          <div class="genre-list" style="margin-top: 0.5rem;">
+            {% for g in anime.genres %}
+            <span class="genre-tag">{{ g|title }}</span>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <a href="/" class="btn">← Back to Home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

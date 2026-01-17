@@ -1,0 +1,44 @@
+{% extends "myapp/base.html" %}
+{% block content %}
+
+<div class="container section">
+  <div class="auth-container card" style="max-width: 500px;">
+    <div class="text-center mb-4">
+      <h1 class="section-title">My Profile</h1>
+    </div>
+
+    <div class="text-center mb-4">
+      <div style="position: relative; display: inline-block;">
+        <img src="{{ user.profile.image.url }}"
+          style="width: 150px; height: 150px; border-radius: 50%; border: 3px solid var(--primary-color); object-fit: cover; box-shadow: 0 0 20px var(--primary-glow);">
+      </div>
+    </div>
+
+    <div class="mb-4 text-center">
+      <p style="font-size: 1.2rem; color: white;"><strong>{{ user.username }}</strong></p>
+      <p style="color: var(--text-muted);">{{ user.email }}</p>
+    </div>
+
+    <hr style="border-color: var(--glass-border); margin: 2rem 0;">
+
+    <div class="form-group">
+      <h3 style="color: white; margin-bottom: 1rem; text-align: center;">Update Profile Picture</h3>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div style="margin-bottom: 1rem;">
+          <input type="file" name="image" accept="image/*" class="form-control">
+        </div>
+        <button type="submit" class="btn" style="width: 100%;">Update Picture</button>
+      </form>
+    </div>
+
+    <div style="margin-top: 2rem; text-align: center;">
+      <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn" style="border-color: #ff4d4d; color: #ff4d4d;">Logout</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

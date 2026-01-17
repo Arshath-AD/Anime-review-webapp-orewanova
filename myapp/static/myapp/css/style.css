@@ -1,6 +1,7 @@
 /* Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
 
+
 :root {
     --bg-color: #050505;
     --card-bg: rgba(20, 20, 20, 0.6);
@@ -67,7 +68,8 @@ ul {
 
 .logo {
     font-size: 1.5rem;
-    font-weight: 700;
+    font-family: "Indie Flower", cursive;
+    font-weight: 10;
     color: var(--primary-color);
     text-shadow: 0 0 10px var(--primary-glow);
     letter-spacing: 1px;
@@ -104,6 +106,27 @@ ul {
     color: #000000 !important;
     box-shadow: 0 0 20px var(--primary-glow);
     text-shadow: none !important;
+}
+
+.profile-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.nav-username {
+  color: #eaeaea;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.nav-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #1cb800;
 }
 
 /* Sections */
@@ -549,4 +572,84 @@ input[type="file"]::file-selector-button:hover {
     margin-bottom: 1rem;
     display: inline-block;
     box-shadow: 0 0 15px var(--primary-glow);
+}
+
+/* === Horizontal Anime Scroll === */
+.genre-row {
+    margin-bottom: 3rem;
+    padding: 0 1rem;
+}
+
+.anime-row {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding-top: 1rem;
+    padding-bottom: 1.5rem;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    /* Firefox */
+    scrollbar-color: var(--primary-color) rgba(255, 255, 255, 0.05);
+}
+
+/* Custom Scrollbar for Webkit */
+.anime-row::-webkit-scrollbar {
+    height: 8px;
+}
+
+.anime-row::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.anime-row::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+    box-shadow: 0 0 10px var(--primary-glow);
+}
+
+.anime-card {
+    flex: 0 0 200px;
+    /* Fixed width for cards */
+    transition: transform 0.3s ease;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+}
+
+.anime-card img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.anime-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 20px rgba(57, 255, 20, 0.2);
+    z-index: 2;
+}
+
+.anime-card:hover img {
+    transform: scale(1.05);
+}
+
+.anime-card p {
+    padding: 1rem;
+    color: white;
+    font-size: 0.9rem;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    background: rgba(0, 0, 0, 0.8);
+    margin: 0;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    backdrop-filter: blur(4px);
 }

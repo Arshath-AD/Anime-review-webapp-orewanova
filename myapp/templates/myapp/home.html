@@ -39,16 +39,33 @@
     </div>
   </section>
 
+{% for genre, anime_list in genre_rows.items %}
+  <section class="genre-section">
+    <h2>{{ genre|title }}</h2>
+
+    <div class="anime-row">
+      {% for a in anime_list %}
+        <div class="anime-card">
+          <a href="{% url 'anime_detail' a.id %}">
+            <img src="/media/{{ a.images.portrait }}">
+            <p>{{ a.title }}</p>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+{% endfor %}
+
   <!-- Anime Grid -->
   <section class="section">
     <h2 class="section-title">Latest Updates</h2>
     <div class="card-grid">
       {% for a in anime %}
       <article class="card">
-        <img src="/media/{{ a.image_path }}" alt="{{ a.title }}" class="card-img">
+        <img src="/media/{{ a.images.landscape }}" alt="{{ a.title }}" class="card-img">
         <div class="card-content">
           <h3 class="card-title">
-            <a href="/anime/{{ a.id }}/">{{ a.title }}</a>
+            <a href="{% url 'anime_detail' a.id %}">{{ a.title }}</a>
           </h3>
           <p class="card-desc">{{ a.description|truncatewords:20 }}</p>
         </div>

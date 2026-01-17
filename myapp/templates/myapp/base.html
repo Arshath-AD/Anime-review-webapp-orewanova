@@ -1,12 +1,14 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Orewa Nova</title>
-    <link rel="stylesheet" href="{% static 'myapp/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'myapp/css/style.css' %}?v=1.1">
 </head>
+
 <body>
     <nav class="navbar">
         <div class="container nav-content">
@@ -19,14 +21,13 @@
                 {% endif %}
 
                 {% if user.is_authenticated %}
-                    <span>Welcome, {{ user.username }}</span>
-                    <form method="post" action="/logout/" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit">Logout</button>
-                    </form>
+                <a href="{% url 'profile' %}" class="profile-link">
+                    <span class="nav-username">{{ user.username }}</span>
+                    <img src="{{ user.profile.image.url }}" class="nav-avatar">
+                </a>
                 {% else %}
-                    <a href="/login/">Login</a>
-                    <a href="/signup/" class="btn">Sign Up</a>
+                <a href="/login/" class="btn" >Login</a>
+                <a href="/signup/" class="btn">Sign Up</a>
                 {% endif %}
             </div>
         </div>
@@ -37,4 +38,5 @@
         {% endblock %}
     </main>
 </body>
+
 </html>

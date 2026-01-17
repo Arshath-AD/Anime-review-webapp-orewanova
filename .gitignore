@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual env
+env/
+venv/
+.venv/
+
+# Django
+db.sqlite3
+staticfiles/
+
+# Media (user uploads)
+media/
+
+# Environment variables
+.env
+
+# OS
+.DS_Store

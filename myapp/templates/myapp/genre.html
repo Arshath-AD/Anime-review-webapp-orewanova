@@ -1,14 +1,32 @@
-<h1>Genre: {{ current_genre|title }}</h1>
+{% extends 'myapp/base.html' %}
 
-<a href="/">← Back to Home</a>
-<hr>
+{% block content %}
+<div class="container section">
+  <div class="text-center mb-4">
+    <h1 class="section-title">Genre: <span style="color: var(--primary-color);">{{ current_genre|title }}</span></h1>
+    <div class="mt-4">
+      <a href="/" class="btn">← Back to Home</a>
+    </div>
+  </div>
 
-{% for a in anime %}
-  <h2>
-    <a href="/anime/{{ a._id }}/">{{ a.title }}</a>
-  </h2>
-  <img src="/media/{{ a.image_path }}" width="200">
-  <p>{{ a.description }}</p>
-{% empty %}
-  <p>No anime found in this genre.</p>
-{% endfor %}
+  <div class="card-grid">
+    {% for a in anime %}
+    <div class="card fade-in" style="animation-delay: {{ forloop.counter0 }}00ms;">
+      <a href="/anime/{{ a.id }}/" style="text-decoration: none;">
+        <div style="overflow: hidden;">
+          <img src="/media/{{ a.images.landscape }}" class="card-img">
+        </div>
+        <div class="card-content">
+          <h2 class="card-title">{{ a.title }}</h2>
+          <p class="card-desc">{{ a.description|truncatechars:100 }}</p>
+        </div>
+      </a>
+    </div>
+    {% empty %}
+    <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted);">
+      <p>No anime found in this genre.</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -19,22 +19,25 @@
       </div>
 
       <div class="form-group">
-        <label>Select Genre</label>
-        <select name="genre">
-          {% for g in genres %}
-          <option value="{{ g.slug }}">{{ g.name }}</option>
-          {% endfor %}
-        </select>
+        <label>Select Genres</label><br>
+        <select name="genres" multiple size="5">
+        {% for g in genres %}
+            <option value="{{ g.slug }}">{{ g.name }}</option>
+        {% endfor %}
+        </select><br><br>
       </div>
 
       <div class="form-group">
-        <label>Or add a new genre</label>
-        <input type="text" name="new_genre" placeholder="Type new genre name...">
+        <label>Add new genre (optional)</label><br>
+        <input type="text" name="new_genre"><br><br>
       </div>
 
       <div class="form-group">
-        <label>Thumbnail Image</label>
-        <input type="file" name="image" accept="image/*" required>
+        <label>Landscape Thumbnail</label><br>
+        <input type="file" name="landscape_image" accept=".jpg,.jpeg,.png" required><br><br>
+
+        <label>Portrait Thumbnail</label><br>
+        <input type="file" name="portrait_image" accept=".jpg,.jpeg,.png" required><br><br>
       </div>
 
       <button type="submit" class="btn-block">Add Anime</button>
