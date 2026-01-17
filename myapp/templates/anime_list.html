@@ -1,0 +1,5 @@
+{% for a in anime %}
+  <h3>{{ a.title }}</h3>
+  <img src="/media/{{ a.image_path }}" width="200">
+  <p>{{ a.description }}</p>
+{% endfor %}

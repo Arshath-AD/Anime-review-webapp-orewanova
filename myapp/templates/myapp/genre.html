@@ -1,0 +1,14 @@
+<h1>Genre: {{ current_genre|title }}</h1>
+
+<a href="/">← Back to Home</a>
+<hr>
+
+{% for a in anime %}
+  <h2>
+    <a href="/anime/{{ a._id }}/">{{ a.title }}</a>
+  </h2>
+  <img src="/media/{{ a.image_path }}" width="200">
+  <p>{{ a.description }}</p>
+{% empty %}
+  <p>No anime found in this genre.</p>
+{% endfor %}
