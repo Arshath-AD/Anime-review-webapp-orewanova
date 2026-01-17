@@ -13,7 +13,11 @@
             <a href="/" class="logo">OREWA NOVA</a>
             <div class="nav-links">
                 <a href="/">Home</a>
-                <a href="#genres">Genres</a>
+                <a href="/#genres">Genres</a>
+                {% if user.is_staff %}
+                | <a href="{% url 'admin_dashboard' %}">Admin Panel</a>
+                {% endif %}
+
                 {% if user.is_authenticated %}
                     <span>Welcome, {{ user.username }}</span>
                     <form method="post" action="/logout/" style="display:inline;">

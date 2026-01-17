@@ -1,0 +1,25 @@
+{% extends "myapp/base.html" %}
+
+{% block content %}
+<div class="container fade-in">
+  <div class="admin-header">
+    <div class="admin-badge">System Administrator</div>
+    <h2 class="section-title" style="display:block; margin-top: 1rem;">Control Center</h2>
+  </div>
+
+  <div class="dashboard-actions">
+    <a href="{% url 'add_anime' %}" class="action-card">
+      <span class="icon">✨</span>
+      Add New Anime
+      <div style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7; text-transform: none; letter-spacing: 0;">Expand
+        the library</div>
+    </a>
+    <a href="{% url 'admin_anime_list' %}" class="action-card">
+      <span class="icon">⚡</span>
+      Manage Anime
+      <div style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7; text-transform: none; letter-spacing: 0;">Edit /
+        Delete entries</div>
+    </a>
+  </div>
+</div>
+{% endblock %}

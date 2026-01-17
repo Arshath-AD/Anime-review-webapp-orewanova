@@ -3,12 +3,12 @@
 {% block content %}
 <div class="container fade-in">
   <div class="card auth-container">
-    <h2 class="section-title text-center" style="margin-bottom: 1.5rem; display: block;">Sign Up</h2>
+    <h2 class="section-title text-center">Sign Up</h2>
 
     <form method="post">
       {% csrf_token %}
       {{ form.as_p }}
-      <button type="submit">Create Account</button>
+      <button type="submit" class="btn-block">Create Account</button>
     </form>
 
     <div class="auth-links">

@@ -3,13 +3,12 @@
 {% block content %}
 <div class="container fade-in">
   <div class="card auth-container">
-    <h2 class="section-title text-center" style="margin-bottom: 1.5rem; display: block;">Login</h2>
+    <h2 class="section-title text-center">Login</h2>
 
     <form method="post">
       {% csrf_token %}
-      <!-- Manually rendering or wrapping form.as_p? form.as_p is okay if CSS targets inputs broadly -->
       {{ form.as_p }}
-      <button type="submit">Login</button>
+      <button type="submit" class="btn-block">Login</button>
     </form>
 
     <div class="auth-links">

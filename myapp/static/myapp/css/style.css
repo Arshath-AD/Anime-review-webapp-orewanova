@@ -326,9 +326,227 @@ button[type="submit"] {
     margin-top: 1rem;
 }
 
-button[type="submit"]:hover {
-    background-color: var(--primary-color) !important;
-    color: #000000 !important;
-    box-shadow: 0 0 20px var(--primary-glow);
-    text-shadow: none !important;
+
+/* === Forms & Inputs === */
+textarea,
+select,
+input[type="file"] {
+    width: 100%;
+    padding: 0.8rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 4px;
+    color: white;
+    font-size: 1rem;
+    transition: all var(--transition-speed);
+    margin-top: 0.5rem;
+    font-family: inherit;
+}
+
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px var(--primary-glow);
+}
+
+select option {
+    background: #000;
+    color: white;
+}
+
+/* File Input Customization */
+input[type="file"]::file-selector-button {
+    background: transparent;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 0.3rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 1rem;
+    transition: all 0.3s;
+}
+
+input[type="file"]::file-selector-button:hover {
+    background: var(--primary-color);
+    color: black;
+}
+
+/* Django Form Errors */
+.errorlist {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1rem;
+    color: #ff4d4d;
+    font-size: 0.9rem;
+    background: rgba(255, 77, 77, 0.1);
+    border: 1px solid rgba(255, 77, 77, 0.3);
+    border-radius: 4px;
+    padding: 0.5rem;
+}
+
+.helptext {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+    margin-bottom: 0.5rem;
+}
+
+/* === Tables (Admin List) === */
+.table-container {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid var(--glass-border);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(20, 20, 20, 0.4);
+    backdrop-filter: blur(5px);
+}
+
+.table th,
+.table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.table th {
+    background: rgba(57, 255, 20, 0.1);
+    color: var(--primary-color);
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+}
+
+.table tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+.action-link {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border: 1px solid var(--glass-border);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-main);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 0.5rem;
+    transition: all 0.2s;
+}
+
+.action-link:hover {
+    background: var(--primary-color);
+    color: black;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 10px var(--primary-glow);
+    text-shadow: none;
+}
+
+.action-link.delete {
+    border-color: rgba(255, 77, 77, 0.5);
+    color: #ff4d4d;
+}
+
+.action-link.delete:hover {
+    background: #ff4d4d;
+    color: white;
+    border-color: #ff4d4d;
+    box-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
+    text-shadow: none;
+}
+
+/* === Admin Dashboard === */
+.dashboard-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.action-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    background: linear-gradient(145deg, rgba(20, 20, 20, 0.8), rgba(10, 10, 10, 0.9));
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 700;
+    color: var(--text-muted);
+    overflow: hidden;
+    z-index: 1;
+}
+
+.action-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(57, 255, 20, 0.05), transparent);
+    transform: translateX(-100%);
+    transition: 0.5s;
+    z-index: -1;
+}
+
+.action-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    box-shadow: 0 0 30px rgba(57, 255, 20, 0.15), inset 0 0 20px rgba(57, 255, 20, 0.05);
+}
+
+.action-card:hover::before {
+    transform: translateX(100%);
+}
+
+.action-card .icon {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.4s ease;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.1));
+}
+
+.action-card:hover .icon {
+    transform: scale(1.2) rotate(5deg);
+    filter: drop-shadow(0 0 15px var(--primary-glow));
+}
+
+.admin-header {
+    text-align: center;
+    margin-bottom: 4rem;
+    position: relative;
+    padding-top: 4rem;
+}
+
+
+.admin-badge {
+    background: rgba(57, 255, 20, 0.1);
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 1rem;
+    display: inline-block;
+    box-shadow: 0 0 15px var(--primary-glow);
 }

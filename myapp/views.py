@@ -3,6 +3,84 @@ from django.contrib.auth.forms import UserCreationForm
 from bson import ObjectId
 from .mongo import anime_collection, genre_collection, activity_collection
 
+from django.contrib.admin.views.decorators import staff_member_required
+from django.core.files.storage import default_storage
+from django.utils.text import slugify
+import os
+
+@staff_member_required
+def admin_dashboard(request):
+    return render(request, "myapp/admin/dashboard.html")
+
+@staff_member_required
+def add_anime(request):
+    genres = list(genre_collection.find())
+
+    if request.method == "POST":
+        title = request.POST["title"]
+        description = request.POST["description"]
+
+        new_genre = request.POST.get("new_genre")
+        if new_genre:
+            slug = slugify(new_genre)
+            genre_collection.insert_one({
+                "name": new_genre.title(),
+                "slug": slug
+            })
+            genre = slug
+        else:
+            genre = request.POST["genre"]
+
+        image = request.FILES["image"]
+        image_name = slugify(title) + os.path.splitext(image.name)[1]
+        image_path = f"anime/thumbnails/{genre}/{image_name}"
+
+        default_storage.save(image_path, image)
+
+        anime_collection.insert_one({
+            "title": title,
+            "description": description,
+            "genre": genre,
+            "image_path": image_path
+        })
+
+        return redirect("admin_dashboard")
+
+    return render(request, "myapp/admin/add_anime.html", {
+        "genres": genres
+    })
+
+@staff_member_required
+def admin_anime_list(request):
+    anime = list(anime_collection.find())
+    for a in anime:
+        a["id"] = str(a["_id"])
+    return render(request, "myapp/admin/anime_list.html", {"anime": anime})
+
+@staff_member_required
+def edit_anime(request, anime_id):
+    anime = anime_collection.find_one({"_id": ObjectId(anime_id)})
+
+    if request.method == "POST":
+        anime_collection.update_one(
+            {"_id": ObjectId(anime_id)},
+            {"$set": {
+                "title": request.POST["title"],
+                "description": request.POST["description"],
+                "genre": request.POST["genre"]
+            }}
+        )
+        return redirect("admin_anime_list")
+
+    anime["id"] = str(anime["_id"])
+    return render(request, "myapp/admin/edit_anime.html", {"anime": anime})
+
+@staff_member_required
+def delete_anime(request, anime_id):
+    anime_collection.delete_one({"_id": ObjectId(anime_id)})
+    return redirect("admin_anime_list")
+
+
 #auth & authentication
 def signup(request):
     if request.method == "POST":

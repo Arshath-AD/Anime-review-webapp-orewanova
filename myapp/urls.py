@@ -10,5 +10,13 @@ urlpatterns = [
     path("login/", auth_views.LoginView.as_view(template_name="myapp/auth/login.html"), name="login"),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path("signup/", views.signup, name="signup"),
-    path('accounts/profile/', views.profile, name='profile')
+    path('accounts/profile/', views.profile, name='profile'),
+
+    path("admin-panel/", views.admin_dashboard, name="admin_dashboard"),
+    path("admin-panel/add-anime/", views.add_anime, name="add_anime"),
+
+    path("admin-panel/anime/", views.admin_anime_list, name="admin_anime_list"),
+    path("admin-panel/anime/edit/<str:anime_id>/", views.edit_anime, name="edit_anime"),
+    path("admin-panel/anime/delete/<str:anime_id>/", views.delete_anime, name="delete_anime"),
+
 ]

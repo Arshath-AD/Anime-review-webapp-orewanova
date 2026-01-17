@@ -1,0 +1,30 @@
+{% extends "myapp/base.html" %}
+
+{% block content %}
+<div class="container fade-in">
+  <div class="section-title text-center" style="display:block; margin-bottom: 2rem;">Manage Anime</div>
+
+  <div class="table-container">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th style="text-align: right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in anime %}
+        <tr>
+          <td>{{ a.title }}</td>
+          <td style="text-align: right;">
+            <a href="{% url 'edit_anime' a.id %}" class="action-link">Edit</a>
+            <a href="{% url 'delete_anime' a.id %}" class="action-link delete"
+              onclick="return confirm('Delete this anime?')">Delete</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
