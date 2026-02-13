@@ -79,38 +79,93 @@ media/
       │    └── portraits/
       └── slidesimg/<anime_id>/
 
-🗂 Project Structure
+## 📁 Project Structure
+
+```bash
 orewa_nova/
-│
-├── myapp/
-│   ├── templates/
-│   ├── static/
-│   ├── views.py
-│   ├── models.py
-│   └── mongo.py
-│
-├── media/
+.
+├── build.sh
+├── db.sqlite3
 ├── manage.py
-├── requirements.txt
-└── README.md
+├── media
+│   ├── anime
+│   │   ├── aot.jpg
+│   │   ├── naruto.jpg
+│   │   ├── portraits
+│   │   ├── slidesimg
+│   │   ├── thumbnails
+│   │   │   ├── landscapes
+│   │   │   └── portraits
+│   └── profiles
+├── myapp
+│   ├── admin.py
+│   ├── apps.py
+│   ├── models.py
+│   ├── mongo.py
+│   ├── seed_genre.py
+│   ├── signals.py
+│   ├── static
+│   │   └── myapp
+│   │       └── css
+│   │           └── style.css
+│   ├── templates
+│   │   └── myapp
+│   │       ├── admin
+│   │       │   ├── add_anime.html
+│   │       │   ├── anime_list.html
+│   │       │   ├── dashboard.html
+│   │       │   └── edit_anime.html
+│   │       ├── anime_detail.html
+│   │       ├── auth
+│   │       │   ├── login.html
+│   │       │   └── signup.html
+│   │       ├── base.html
+│   │       ├── genre.html
+│   │       ├── home.html
+│   │       └── profile.html
+│   ├── tests.py
+│   ├── urls.py
+│   └── views.py
+├── orewa_nova
+│   ├── asgi.py
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── README.md
+└── requirements.txt
+```
 
-⚙️ Installation
-1️⃣ Clone
-git clone https://github.com/yourusername/anime-review-webapp-orewanova.git
-cd anime-review-webapp-orewanova
 
-2️⃣ Create Virtual Environment
+## ⚙ Installation
+
+### 1️⃣ Clone the repository
+```bash
+git clone https://github.com/Arshath-AD/Anime-review-webapp-orewanova.git
+cd Anime-review-webapp-orewanova
+```
+
+### 2️⃣ Create Virtual Environment
+```bash
 python -m venv env
 source env/bin/activate
+```
 
-3️⃣ Install Dependencies
+### 3️⃣ Install Dependencies
+```bash
 pip install -r requirements.txt
+```
 
-4️⃣ Run Migrations
+### 4️⃣ Run Migrations
+```bash
 python manage.py migrate
+```
 
-5️⃣ Start Server
+### 5️⃣ Start Server
+```bash
 python manage.py runserver
+```
+
 
 
 Open:
