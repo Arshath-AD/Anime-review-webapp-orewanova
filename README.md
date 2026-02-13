@@ -89,8 +89,6 @@ orewa_nova/
 ├── manage.py
 ├── media
 │   ├── anime
-│   │   ├── aot.jpg
-│   │   ├── naruto.jpg
 │   │   ├── portraits
 │   │   ├── slidesimg
 │   │   ├── thumbnails
