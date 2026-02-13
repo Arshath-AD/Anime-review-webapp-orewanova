@@ -1,38 +1,111 @@
 {% extends 'myapp/base.html' %}
 
 {% block content %}
-<div class="container section">
-  <div class="card" style="max-width: 900px; margin: 0 auto; padding: 2rem;">
-    <div class="text-center mb-4">
-      <h1 class="section-title">{{ anime.title }}</h1>
+<!-- Hero Section -->
+<div class="hero-section">
+  <img src="/media/{{ anime.images.landscape }}" alt="{{ anime.title }} Landscape" class="hero-bg">
+  <div class="hero-overlay"></div>
+</div>
+
+<div class="container anime-details-container fade-in">
+  <div class="details-grid">
+    <!-- Left Column: Poster -->
+    <div class="anime-poster-column">
+      <div class="anime-poster-card">
+        <img src="/media/{{ anime.images.portrait }}" alt="{{ anime.title }} Poster" class="anime-poster-img">
+      </div>
+      <div class="mt-4 text-center">
+        <!-- Action Buttons -->
+        <a href="/" class="btn" style="width: 100%; border-color: var(--text-muted); color: var(--text-muted);">
+          Back to Home
+        </a>
+      </div>
     </div>
 
-    <div style="display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center;">
-      <div style="flex: 1; min-width: 300px;">
-        <img src="/media/{{ anime.images.landscape }}" class="card-img"
-          style="height: auto; width: 100%; border-radius: 8px; box-shadow: 0 0 20px var(--primary-glow);">
+    <!-- Right Column: Info & Slider -->
+    <div class="anime-info-column">
+      <h1 class="anime-title-large">{{ anime.title }}</h1>
+
+      <div class="anime-meta-row">
+        {% for g in anime.genres %}
+        <a href="/genre/{{ g|slugify }}/" class="genre-tag">{{ g|title }}</a>
+        {% endfor %}
       </div>
 
-      <div style="flex: 1; min-width: 300px; color: var(--text-main);">
-        <div class="mb-4">
-          <h3>Description</h3>
-          <p style="color: var(--text-muted); line-height: 1.6; margin-top: 0.5rem;">{{ anime.description }}</p>
-        </div>
+      <div class="anime-synopsis">
+        <h3 style="color: white; margin-bottom: 0.5rem;">Synopsis</h3>
+        {{ anime.description|linebreaks }}
+      </div>
 
-        <div class="mb-4">
-          <h3>Genres</h3>
-          <div class="genre-list" style="margin-top: 0.5rem;">
-            {% for g in anime.genres %}
-            <span class="genre-tag">{{ g|title }}</span>
+      <!-- Slides / Screenshots -->
+      {% if anime.slides %}
+      <div class="mt-5">
+        <h3 class="section-title" style="font-size: 1.5rem;">Gallery</h3>
+        <div class="glide anime-glide">
+          <div class="glide__track" data-glide-el="track">
+            <ul class="glide__slides">
+              {% for img in anime.slides %}
+              <li class="glide__slide">
+                <img src="/media/{{ img }}">
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+
+          <div class="glide__arrows" data-glide-el="controls">
+            <button class="glide__arrow glide__arrow--left" data-glide-dir="<">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+            <button class="glide__arrow glide__arrow--right" data-glide-dir=">">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="glide__bullets" data-glide-el="controls[nav]" style="bottom: -2em;">
+            {% for img in anime.slides %}
+            <button class="glide__bullet" data-glide-dir="={{ forloop.counter0 }}"></button>
             {% endfor %}
           </div>
         </div>
-
-        <div class="mt-4">
-          <a href="/" class="btn">← Back to Home</a>
-        </div>
       </div>
+      {% else %}
+      <!-- Fallback for no slides -->
+      <div class="mt-5">
+        <h3 class="section-title" style="font-size: 1.5rem; color: var(--text-muted);">No Gallery Images Available</h3>
+        <p style="color: var(--text-muted);">Admins can add screenshots by editing this anime.</p>
+      </div>
+      {% endif %}
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const sliderElement = document.querySelector('.anime-glide');
+    if (sliderElement) {
+      new Glide(sliderElement, {
+        type: 'carousel',
+        perView: 2, /* Show part of next slides */
+        focusAt: 'center', /* Center the active slide */
+        gap: 20, /* Space between slides */
+        autoplay: 4000,
+        hoverpause: true,
+        animationDuration: 600,
+        animationTimingFunc: 'cubic-bezier(0.25, 1, 0.5, 1)',
+        breakpoints: {
+          768: {
+            perView: 1,
+            gap: 10
+          }
+        }
+      }).mount();
+    }
+  });
+</script>
 {% endblock %}

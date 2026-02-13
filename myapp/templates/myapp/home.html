@@ -3,12 +3,32 @@
 {% block content %}
 <div class="container fade-in">
   <!-- Hero / Title -->
-  <header class="section text-center">
-    <h1 class="section-title">Anime List</h1>
-    <p style="color: var(--text-muted); max-width: 600px; margin: 1rem auto;">
-      Discover your next favorite anime. Browse through our curated collection and genres.
-    </p>
-  </header>
+  <!-- <section class="section">
+    <h2 class="section-title">Recently Added</h2>
+
+    <div class="glide" id="recent-glide">
+      <div class="glide__track" data-glide-el="track">
+        <ul class="glide__slides">
+
+          {% for a in recent_anime %}
+          <li class="glide__slide">
+            <a href="{% url 'anime_detail' a.id %}">
+              <img src="/media/{{ a.images.portrait }}" class="slider-img">
+              <p class="slider-title">{{ a.title }}</p>
+            </a>
+          </li>
+          {% endfor %}
+
+        </ul>
+      </div>
+
+      <div class="glide__arrows" data-glide-el="controls">
+        <button class="glide__arrow glide__arrow--left" data-glide-dir="<">‹</button>
+        <button class="glide__arrow glide__arrow--right" data-glide-dir=">">›</button>
+      </div>
+    </div>
+  </section> -->
+
 
   {% if user.is_authenticated and recommendations %}
   <section class="section">
@@ -39,39 +59,131 @@
     </div>
   </section>
 
-{% for genre, anime_list in genre_rows.items %}
+  {% for genre, anime_list in genre_rows.items %}
   <section class="genre-section">
     <h2>{{ genre|title }}</h2>
 
     <div class="anime-row">
       {% for a in anime_list %}
-        <div class="anime-card">
-          <a href="{% url 'anime_detail' a.id %}">
-            <img src="/media/{{ a.images.portrait }}">
-            <p>{{ a.title }}</p>
-          </a>
-        </div>
+      <div class="anime-card">
+        <a href="{% url 'anime_detail' a.id %}">
+          <img src="/media/{{ a.images.portrait }}">
+          <p>{{ a.title }}</p>
+        </a>
+      </div>
       {% endfor %}
     </div>
   </section>
-{% endfor %}
+  {% endfor %}
 
   <!-- Anime Grid -->
   <section class="section">
-    <h2 class="section-title">Latest Updates</h2>
-    <div class="card-grid">
-      {% for a in anime %}
+  <h2 class="section-title">Latest Updates</h2>
+  <div class="card-grid">
+    {% for a in anime %}
+    <a href="{% url 'anime_detail' a.id %}" class="card-link">
       <article class="card">
         <img src="/media/{{ a.images.landscape }}" alt="{{ a.title }}" class="card-img">
         <div class="card-content">
-          <h3 class="card-title">
-            <a href="{% url 'anime_detail' a.id %}">{{ a.title }}</a>
-          </h3>
-          <p class="card-desc">{{ a.description|truncatewords:20 }}</p>
+          <h3 class="card-title">{{ a.title }}</h3>
+          <p class="card-desc">{{ a.summary }}</p>
         </div>
       </article>
-      {% endfor %}
-    </div>
-  </section>
+    </a>
+    {% endfor %}
+  </div>
+</section>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  const config = {
+    type: 'carousel',
+    perView: 5,
+    focusAt: 'center',
+    gap: 0,
+    autoplay: 3000,
+    hoverpause: true,
+    animationDuration: 800,
+  };
+
+  const glide = new Glide('#recent-glide', config);
+
+  // 3D Effect Logic
+  glide.on(['mount.after', 'run'], function () {
+    const slides = glide._c.Html.slides;
+
+    slides.forEach(slide => {
+      slide.style.transform = '';
+      slide.style.opacity = '';
+      slide.style.zIndex = '';
+    });
+
+    updateCoverFlow();
+  });
+
+  // Custom function to handle the 3D transforms
+  function updateCoverFlow() {
+    const components = glide._c;
+    const slides = components.Html.slides;
+
+    // Reset all first
+    slides.forEach(s => {
+      s.style.transform = 'scale(0.95) rotateY(0deg)';
+      s.style.opacity = '1'; /* Solid opacity */
+      s.style.zIndex = '1';
+      s.style.transition = 'transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.4s ease';
+    });
+
+    const activeSlide = components.Html.root.querySelector('.glide__slide--active');
+
+    if (activeSlide) {
+      // 1. Active CENTER Slide
+      activeSlide.style.transform = 'scale(1) rotateY(0deg) translateZ(0)';
+      activeSlide.style.opacity = '1';
+      activeSlide.style.zIndex = '50';
+
+      // 2. Previous Sibling (Left)
+      let prev = activeSlide.previousElementSibling;
+      if (prev && prev.classList.contains('glide__slide')) {
+        // Pull RIGHT, Solid
+        prev.style.transform = 'scale(1) translateX(70px) rotateY(-70deg) translateZ(-50px)';
+        prev.style.opacity = '1';
+        prev.style.zIndex = '10';
+
+        // 3. Outer Left
+        let prev2 = prev.previousElementSibling;
+        if (prev2 && prev2.classList.contains('glide__slide')) {
+          prev2.style.transform = 'scale(1) translateX(140px) rotateY(-70deg) translateZ(-150px)';
+          prev2.style.opacity = '1';
+          prev2.style.zIndex = '5';
+        }
+      }
+
+      // 4. Next Sibling (Right)
+      let next = activeSlide.nextElementSibling;
+      if (next && next.classList.contains('glide__slide')) {
+        // Pull LEFT, Solid
+        next.style.transform = 'scale(1) translateX(-70px) rotateY(70deg) translateZ(-50px)';
+        next.style.opacity = '1';
+        next.style.zIndex = '10';
+
+        // 5. Outer Right
+        let next2 = next.nextElementSibling;
+        if (next2 && next2.classList.contains('glide__slide')) {
+          next2.style.transform = 'scale(1) translateX(-140px) rotateY(70deg) translateZ(-150px)';
+          next2.style.opacity = '1';
+          next2.style.zIndex = '5';
+        }
+      }
+    }
+  }
+
+  glide.on(['mount.after', 'run.after'], () => {
+    requestAnimationFrame(updateCoverFlow);
+  });
+
+  glide.mount();
+</script>
 {% endblock %}

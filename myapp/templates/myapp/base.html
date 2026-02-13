@@ -6,7 +6,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Orewa Nova</title>
-    <link rel="stylesheet" href="{% static 'myapp/css/style.css' %}?v=1.1">
+    <link rel="stylesheet" href="{% static 'myapp/css/style.css' %}?v=1.12">
+    <!-- Glide CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glidejs/glide/dist/css/glide.core.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glidejs/glide/dist/css/glide.theme.min.css">
+    <!-- Glide JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@glidejs/glide/dist/glide.min.js"></script>
+
 </head>
 
 <body>
@@ -26,7 +32,7 @@
                     <img src="{{ user.profile.image.url }}" class="nav-avatar">
                 </a>
                 {% else %}
-                <a href="/login/" class="btn" >Login</a>
+                <a href="/login/" class="btn">Login</a>
                 <a href="/signup/" class="btn">Sign Up</a>
                 {% endif %}
             </div>
@@ -37,6 +43,9 @@
         {% block content %}
         {% endblock %}
     </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@glidejs/glide/dist/glide.min.js"></script>
+    {% block extra_scripts %}{% endblock %}
 </body>
 
 </html>

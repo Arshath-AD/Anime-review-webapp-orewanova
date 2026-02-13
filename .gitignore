@@ -2,6 +2,7 @@
 __pycache__/
 *.pyc
 *.pyo
+myapp/__pycache__/views.cpython-312.pyc
 
 # Virtual env
 env/
