@@ -5,24 +5,76 @@
   <div class="mb-4">
     <a href="/" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">← Back to Home</a>
   </div>
-  <div class="admin-header">
-    <div class="admin-badge">System Administrator</div>
-    <h2 class="section-title" style="display:block; margin-top: 1rem;">Control Center</h2>
+
+  <div class="admin-header" style="text-align: center; margin-bottom: 3rem;">
+    <div class="admin-badge" style="margin-bottom: 1rem;">System Administrator</div>
+    <h2 class="section-title"
+      style="display:block; font-size: 3rem; text-shadow: 0 0 20px rgba(57, 255, 20, 0.4); margin-bottom: 2rem;">
+      Control Center
+    </h2>
+    <p style="color: var(--text-muted); font-size: 1.1rem; letter-spacing: 1px;">OVERVIEW & STATISTICS</p>
   </div>
 
-  <div class="dashboard-actions">
-    <a href="{% url 'add_anime' %}" class="action-card">
-      <span class="icon">✨</span>
-      Add New Anime
-      <div style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7; text-transform: none; letter-spacing: 0;">Expand
-        the library</div>
-    </a>
-    <a href="{% url 'admin_anime_list' %}" class="action-card">
-      <span class="icon">⚡</span>
-      Manage Anime
-      <div style="font-size: 0.8rem; margin-top: 0.5rem; opacity: 0.7; text-transform: none; letter-spacing: 0;">Edit /
-        Delete entries</div>
+
+  <!-- Stats Overview -->
+  <section class="admin-stats container">
+    <div class="stats-grid">
+
+      <div class="stat-card">
+        <h2>{{ total_anime }}</h2>
+        <p>Total Anime</p>
+      </div>
+
+      <div class="stat-card">
+        <h2>{{ total_genres }}</h2>
+        <p>Total Genres</p>
+      </div>
+
+      <div class="stat-card">
+        <h2>{{ total_slides }}</h2>
+        <p>Total Slides</p>
+      </div>
+
+      <div class="stat-card">
+        <h2>{{ total_users }}</h2>
+        <p>Total Users</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Navigation Grid (Manage Content + Future Modules) -->
+  <div class="container" style="margin-top: 3rem; margin-bottom: 4rem;">
+    <a href="{% url 'manage_content' %}" class="admin-card">
+      <span style="font-size: 2rem; display: block; margin-bottom: 0.5rem;">📂</span>
+      Manage Content
+      <div
+        style="font-size: 0.9rem; text-transform: none; opacity: 0.8; margin-top: 0.5rem; font-weight: 400; letter-spacing: 0.5px;">
+        Add, Edit, or Delete Anime Entries
+      </div>
     </a>
   </div>
+
+  <!-- Recent Activity -->
+  <div class="container" style="max-width: 800px;">
+    <h3
+      style="color: var(--primary-color); margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: 2px; font-size: 1.2rem; text-align: center;">
+      Recent System Activity
+    </h3>
+    <div class="activity-card" style="margin-bottom: 4rem;">
+      {% for item in activity %}
+      <div class="activity-item">
+        <span class="activity-dot"></span>
+        <p>
+          <strong style="color: white;">{{ item.admin }}</strong>
+          <span style="color: var(--text-muted);">{{ item.action }}</span>
+          <span style="color: var(--primary-color);">{{ item.entity }}</span>:
+          <span style="color: white;">{{ item.title }}</span>
+        </p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
 </div>
 {% endblock %}

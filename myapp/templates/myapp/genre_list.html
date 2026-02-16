@@ -1,0 +1,67 @@
+{% extends "myapp/base.html" %}
+
+{% block content %}
+<div class="container fade-in page-spacer">
+
+    <div class="search-wrapper">
+        <input type="text" name="q" id="genre-search" placeholder="Search anime..." autocomplete="off">
+    </div>
+
+
+
+    <div class="admin-header" style="text-align: center; margin-bottom: 4rem;">
+        <h1 class="section-title"
+            style="font-size: 3.5rem; text-shadow: 0 0 30px rgba(57, 255, 20, 0.3); margin-bottom: 1rem;">
+            Explore Genres
+        </h1>
+        <p style="color: var(--text-muted); font-size: 1.2rem; letter-spacing: 2px; text-transform: uppercase;">
+            Discover your next favorite anime
+        </p>
+    </div>
+
+    <div class="genre-grid">
+        {% for genre in genres %}
+        <a href="/genre/{{ genre.name|slugify }}/" class="genre-card">
+            <div class="genre-content">
+                <h3>{{ genre.name }}</h3>
+                <span class="genre-arrow">→</span>
+            </div>
+            <div class="genre-glow"></div>
+        </a>
+        {% empty %}
+        <p style="text-align: center; color: var(--text-muted); grid-column: 1/-1;">No genres found.</p>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const input = document.getElementById("genre-search");
+        if (!input) return;
+
+        input.addEventListener("input", function () {
+
+            const query = this.value.toLowerCase().trim();
+            const cards = document.querySelectorAll(".genre-card");
+
+            cards.forEach(card => {
+
+                const text = card.innerText.toLowerCase();
+
+                if (text.includes(query)) {
+                    card.style.display = "";
+                } else {
+                    card.style.display = "none";
+                }
+
+            });
+
+        });
+
+    });
+</script>
+{% endblock %}

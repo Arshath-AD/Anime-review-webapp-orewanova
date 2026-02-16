@@ -2,32 +2,63 @@
 
 {% block content %}
 <div class="container fade-in">
-  <!-- Hero / Title -->
-  <!-- <section class="section">
-    <h2 class="section-title">Recently Added</h2>
 
-    <div class="glide" id="recent-glide">
+  <div class="search-wrapper" style="margin: 2rem 0;">
+    <input type="text" name="q" id="search-input" placeholder="Search anime..." autocomplete="off">
+    <div id="search-results" class="search-dropdown"></div>
+  </div>
+
+
+  <!-- Hero / Title -->
+  <section class="hero-slider">
+    <div class="glide hero-glide">
       <div class="glide__track" data-glide-el="track">
         <ul class="glide__slides">
+          {% for a in featured %}
+          <li class="glide__slide hero-slide">
+            <div class="hero-bg" style="background-image: url('/media/{{ a.images.landscape }}');"></div>
 
-          {% for a in recent_anime %}
-          <li class="glide__slide">
-            <a href="{% url 'anime_detail' a.id %}">
-              <img src="/media/{{ a.images.portrait }}" class="slider-img">
-              <p class="slider-title">{{ a.title }}</p>
-            </a>
+            <div class="hero-overlay"></div>
+
+            <div class="hero-content">
+              <div class="container">
+                <h1>{{ a.title }}</h1>
+                <p>{{ a.summary }}</p>
+
+                <div class="hero-genres">
+                  {% for g in a.genres %}
+                  <span>{{ g|title }}</span>
+                  {% endfor %}
+                </div>
+
+                <a href="{% url 'anime_detail' a.id %}" class="hero-btn">
+                  Explore
+                </a>
+              </div>
+            </div>
           </li>
           {% endfor %}
-
         </ul>
       </div>
-
+      <!-- Arrows -->
       <div class="glide__arrows" data-glide-el="controls">
-        <button class="glide__arrow glide__arrow--left" data-glide-dir="<">‹</button>
-        <button class="glide__arrow glide__arrow--right" data-glide-dir=">">›</button>
+        <button class="glide__arrow glide__arrow--left" data-glide-dir="<">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <button class="glide__arrow glide__arrow--right" data-glide-dir=">">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
       </div>
     </div>
-  </section> -->
+  </section>
+
+
 
 
   {% if user.is_authenticated and recommendations %}
@@ -78,112 +109,68 @@
 
   <!-- Anime Grid -->
   <section class="section">
-  <h2 class="section-title">Latest Updates</h2>
-  <div class="card-grid">
-    {% for a in anime %}
-    <a href="{% url 'anime_detail' a.id %}" class="card-link">
-      <article class="card">
-        <img src="/media/{{ a.images.landscape }}" alt="{{ a.title }}" class="card-img">
-        <div class="card-content">
-          <h3 class="card-title">{{ a.title }}</h3>
-          <p class="card-desc">{{ a.summary }}</p>
-        </div>
-      </article>
-    </a>
-    {% endfor %}
-  </div>
-</section>
+    <h2 class="section-title">Latest Updates</h2>
+    <div class="card-grid">
+      {% for a in anime %}
+      <a href="{% url 'anime_detail' a.id %}" class="card-link">
+        <article class="card">
+          <img src="/media/{{ a.images.landscape }}" alt="{{ a.title }}" class="card-img">
+          <div class="card-content">
+            <h3 class="card-title">{{ a.title }}</h3>
+            <p class="card-desc">{{ a.summary }}</p>
+          </div>
+        </article>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
 </div>
 {% endblock %}
 
 {% block extra_scripts %}
 <script>
-  const config = {
+  new Glide('.hero-glide', {
     type: 'carousel',
-    perView: 5,
-    focusAt: 'center',
+    perView: 1,
+    focusAt: 0,
     gap: 0,
-    autoplay: 3000,
+    autoplay: 4000,
     hoverpause: true,
     animationDuration: 800,
-  };
-
-  const glide = new Glide('#recent-glide', config);
-
-  // 3D Effect Logic
-  glide.on(['mount.after', 'run'], function () {
-    const slides = glide._c.Html.slides;
-
-    slides.forEach(slide => {
-      slide.style.transform = '';
-      slide.style.opacity = '';
-      slide.style.zIndex = '';
-    });
-
-    updateCoverFlow();
-  });
-
-  // Custom function to handle the 3D transforms
-  function updateCoverFlow() {
-    const components = glide._c;
-    const slides = components.Html.slides;
-
-    // Reset all first
-    slides.forEach(s => {
-      s.style.transform = 'scale(0.95) rotateY(0deg)';
-      s.style.opacity = '1'; /* Solid opacity */
-      s.style.zIndex = '1';
-      s.style.transition = 'transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.4s ease';
-    });
-
-    const activeSlide = components.Html.root.querySelector('.glide__slide--active');
-
-    if (activeSlide) {
-      // 1. Active CENTER Slide
-      activeSlide.style.transform = 'scale(1) rotateY(0deg) translateZ(0)';
-      activeSlide.style.opacity = '1';
-      activeSlide.style.zIndex = '50';
-
-      // 2. Previous Sibling (Left)
-      let prev = activeSlide.previousElementSibling;
-      if (prev && prev.classList.contains('glide__slide')) {
-        // Pull RIGHT, Solid
-        prev.style.transform = 'scale(1) translateX(70px) rotateY(-70deg) translateZ(-50px)';
-        prev.style.opacity = '1';
-        prev.style.zIndex = '10';
-
-        // 3. Outer Left
-        let prev2 = prev.previousElementSibling;
-        if (prev2 && prev2.classList.contains('glide__slide')) {
-          prev2.style.transform = 'scale(1) translateX(140px) rotateY(-70deg) translateZ(-150px)';
-          prev2.style.opacity = '1';
-          prev2.style.zIndex = '5';
-        }
-      }
-
-      // 4. Next Sibling (Right)
-      let next = activeSlide.nextElementSibling;
-      if (next && next.classList.contains('glide__slide')) {
-        // Pull LEFT, Solid
-        next.style.transform = 'scale(1) translateX(-70px) rotateY(70deg) translateZ(-50px)';
-        next.style.opacity = '1';
-        next.style.zIndex = '10';
-
-        // 5. Outer Right
-        let next2 = next.nextElementSibling;
-        if (next2 && next2.classList.contains('glide__slide')) {
-          next2.style.transform = 'scale(1) translateX(-140px) rotateY(70deg) translateZ(-150px)';
-          next2.style.opacity = '1';
-          next2.style.zIndex = '5';
-        }
-      }
-    }
-  }
-
-  glide.on(['mount.after', 'run.after'], () => {
-    requestAnimationFrame(updateCoverFlow);
-  });
-
-  glide.mount();
+  }).mount()
 </script>
+<script>
+  document.getElementById("search-input").addEventListener("input", function () {
+    const query = this.value;
+
+    if (query.length < 2) {
+      document.getElementById("search-results").style.display = "none";
+      return;
+    }
+
+    fetch(`/api/search/?q=${query}`)
+      .then(res => res.json())
+      .then(data => {
+        const dropdown = document.getElementById("search-results");
+        dropdown.innerHTML = "";
+
+        if (data.results.length === 0) {
+          dropdown.style.display = "none";
+          return;
+        }
+
+        data.results.forEach(anime => {
+          dropdown.innerHTML += `
+                    <div class="search-item" onclick="window.location='/anime/${anime.id}/'">
+                        <img src="/media/${anime.image}">
+                        <span>${anime.title}</span>
+                    </div>
+                `;
+        });
+
+        dropdown.style.display = "block";
+      });
+  });
+</script>
+
 {% endblock %}

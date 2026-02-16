@@ -14,6 +14,36 @@
       <div class="anime-poster-card">
         <img src="/media/{{ anime.images.portrait }}" alt="{{ anime.title }} Poster" class="anime-poster-img">
       </div>
+
+      <div class="rating-section">
+        <h3>Rating</h3>
+
+        <div class="stars" data-anime="{{ anime.id }}" data-user-rating="{{ anime.user_rating|default:0 }}"
+          data-auth="{{ user.is_authenticated|yesno:'true,false' }}">
+          {% for i in "12345" %}
+          <span class="star {% if forloop.counter <= anime.user_rating %}active{% endif %}"
+            data-value="{{ forloop.counter }}">★</span>
+          {% endfor %}
+        </div>
+
+        <p id="rating-info">
+          {{ anime.avg_rating }} ⭐ ({{ anime.total_ratings }} ratings)
+        </p>
+
+        {% if not user.is_authenticated %}
+        <p>
+          <a href="{% url 'login' %}?next={{ request.path }}">
+            Login to rate
+          </a>
+        </p>
+        {% endif %}
+      </div>
+
+
+
+
+
+
       <div class="mt-4 text-center">
         <!-- Action Buttons -->
         <a href="/" class="btn" style="width: 100%; border-color: var(--text-muted); color: var(--text-muted);">
@@ -33,7 +63,7 @@
       </div>
 
       <div class="anime-synopsis">
-        <h3 style="color: white; margin-bottom: 0.5rem;">Synopsis</h3>
+        <h3>Description</h3>
         {{ anime.description|linebreaks }}
       </div>
 
@@ -41,36 +71,29 @@
       {% if anime.slides %}
       <div class="mt-5">
         <h3 class="section-title" style="font-size: 1.5rem;">Gallery</h3>
-        <div class="glide anime-glide">
-          <div class="glide__track" data-glide-el="track">
-            <ul class="glide__slides">
+        <!-- Gallery Container Placeholder -->
+        <div class="gallery-container">
+          <div class="glide" id="anime-gallery">
+            <div class="glide__track" data-glide-el="track">
+              <ul class="glide__slides">
+                {% for img in anime.slides %}
+                <li class="glide__slide">
+                  <img src="/media/{{ img }}" alt="Anime Screenshot" class="gallery-img">
+                </li>
+                {% endfor %}
+              </ul>
+            </div>
+            <!-- Arrows -->
+            <div class="glide__arrows" data-glide-el="controls">
+              <button class="glide__arrow glide__arrow--left gallery-arrow" data-glide-dir="<">❮</button>
+              <button class="glide__arrow glide__arrow--right gallery-arrow" data-glide-dir=">">❯</button>
+            </div>
+            <!-- Bullets -->
+            <div class="glide__bullets gallery-bullets" data-glide-el="controls[nav]">
               {% for img in anime.slides %}
-              <li class="glide__slide">
-                <img src="/media/{{ img }}">
-              </li>
+              <button class="glide__bullet" data-glide-dir="={{ forloop.counter0 }}"></button>
               {% endfor %}
-            </ul>
-          </div>
-
-          <div class="glide__arrows" data-glide-el="controls">
-            <button class="glide__arrow glide__arrow--left" data-glide-dir="<">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M15 18l-6-6 6-6" />
-              </svg>
-            </button>
-            <button class="glide__arrow glide__arrow--right" data-glide-dir=">">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 18l6-6-6-6" />
-              </svg>
-            </button>
-          </div>
-
-          <div class="glide__bullets" data-glide-el="controls[nav]" style="bottom: -2em;">
-            {% for img in anime.slides %}
-            <button class="glide__bullet" data-glide-dir="={{ forloop.counter0 }}"></button>
-            {% endfor %}
+            </div>
           </div>
         </div>
       </div>
@@ -81,31 +104,200 @@
         <p style="color: var(--text-muted);">Admins can add screenshots by editing this anime.</p>
       </div>
       {% endif %}
+
+
+      <!-- Comment Section (Moved Here) -->
+      <div class="comment-section fade-in">
+        <h3 class="section-title">
+          <span style="color: var(--primary-color);">💬</span> Community Discussion
+        </h3>
+
+        {% if user.is_authenticated %}
+        <form id="comment-form" class="comment-input-wrapper">
+          <textarea name="comment" id="comment-input" placeholder="Join the discussion, {{ user.username }}..."
+            required></textarea>
+          <button type="submit" class="btn btn-glow">Post Comment</button>
+        </form>
+        {% else %}
+        <div class="login-prompt">
+          <p>Locked! 🔒 <a href="{% url 'login' %}?next={{ request.path }}">Log in</a> to unlock the comments.</p>
+        </div>
+        {% endif %}
+
+        <div id="comment-list" class="custom-scrollbar">
+          {% for c in comments %}
+          <div class="comment-card">
+            <div class="comment-avatar">{{ c.username|slice:":1" }}</div>
+            <div class="comment-content">
+              <div class="comment-header">
+                <strong>{{ c.username }}</strong>
+                <small>{{ c.created_at|date:"M d, Y" }}</small>
+              </div>
+              <p>{{ c.text }}</p>
+            </div>
+          </div>
+          {% empty %}
+          <p class="no-comments">Be the first to share your thoughts! 🏆</p>
+          {% endfor %}
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const sliderElement = document.querySelector('.anime-glide');
-    if (sliderElement) {
-      new Glide(sliderElement, {
-        type: 'carousel',
-        perView: 2, /* Show part of next slides */
-        focusAt: 'center', /* Center the active slide */
-        gap: 20, /* Space between slides */
-        autoplay: 4000,
+
+    /* =========================
+       1️⃣ Initialize Gallery Slider
+    ========================== */
+    const galleryElement = document.getElementById("anime-gallery");
+
+    if (galleryElement && typeof Glide !== "undefined") {
+      new Glide("#anime-gallery", {
+        type: "carousel",
+        perView: 2,
+        focusAt: "center",
+        gap: 15,
+        autoplay: 3000,
         hoverpause: true,
         animationDuration: 600,
-        animationTimingFunc: 'cubic-bezier(0.25, 1, 0.5, 1)',
         breakpoints: {
-          768: {
-            perView: 1,
-            gap: 10
-          }
+          1024: { perView: 2 },
+          600: { perView: 1 }
         }
       }).mount();
     }
+
+    /* =========================
+       2️⃣ Rating System
+    ========================== */
+    const container = document.querySelector(".stars");
+    if (!container) return;
+
+    const isAuthenticated = container.dataset.auth === "true";
+    if (!isAuthenticated) return;
+
+    const stars = document.querySelectorAll(".star");
+    const animeId = container.dataset.anime;
+    let userRating = parseInt(container.dataset.userRating || 0);
+    let isSubmitting = false;
+
+    stars.forEach(star => {
+
+      star.addEventListener("mouseenter", function () {
+        highlightStars(this.dataset.value);
+      });
+
+      star.addEventListener("click", function () {
+        submitRating(this.dataset.value);
+      });
+
+    });
+
+    container.addEventListener("mouseleave", function () {
+      resetStars();
+    });
+
+    function highlightStars(value) {
+      stars.forEach(s => {
+        s.classList.toggle("active", parseInt(s.dataset.value) <= value);
+      });
+    }
+
+    function resetStars() {
+      stars.forEach(s => {
+        s.classList.toggle("active", parseInt(s.dataset.value) <= userRating);
+      });
+    }
+
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.startsWith(name + "=")) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    function submitRating(value) {
+
+      if (isSubmitting) return;
+      isSubmitting = true;
+
+      fetch(`/anime/${animeId}/rate/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRFToken": getCookie("csrftoken")
+        },
+        body: `rating=${value}`
+      })
+        .then(res => res.json())
+        .then(data => {
+
+          userRating = parseInt(value);
+
+          if (data.avg_rating !== undefined) {
+            document.getElementById("rating-info").innerText =
+              `${data.avg_rating} ⭐ (${data.total_ratings} ratings)`;
+          }
+
+          resetStars();
+        })
+        .catch(err => console.error("Rating error:", err))
+        .finally(() => {
+          isSubmitting = false;
+        });
+    }
+
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.getElementById("comment-form");
+    if (!form) return;
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const input = document.getElementById("comment-input");
+      const text = input.value.trim();
+
+      if (!text) return;
+
+      fetch(`/anime/{{ anime.id }}/comment/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRFToken": document.cookie.split('; ')
+            .find(row => row.startsWith('csrftoken='))
+            ?.split('=')[1]
+        },
+        body: `comment=${encodeURIComponent(text)}`
+      })
+        .then(res => res.json())
+        .then(data => {
+
+          const commentList = document.getElementById("comment-list");
+
+          const newComment = document.createElement("div");
+          newComment.classList.add("comment-card");
+          newComment.innerHTML = `<strong>${data.username}</strong><p>${data.text}</p>`;
+
+          commentList.prepend(newComment);
+          input.value = "";
+        });
+    });
+
   });
 </script>
 {% endblock %}

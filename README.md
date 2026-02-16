@@ -94,7 +94,7 @@ orewa_nova/
 │   │   ├── thumbnails
 │   │   │   ├── landscapes
 │   │   │   └── portraits
-│   └── profiles
+│   └── profiles  
 ├── myapp
 │   ├── admin.py
 │   ├── apps.py

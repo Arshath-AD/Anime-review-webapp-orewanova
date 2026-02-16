@@ -6,12 +6,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Orewa Nova</title>
-    <link rel="stylesheet" href="{% static 'myapp/css/style.css' %}?v=1.12">
     <!-- Glide CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glidejs/glide/dist/css/glide.core.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@glidejs/glide/dist/css/glide.theme.min.css">
-    <!-- Glide JS -->
-    <script src="https://cdn.jsdelivr.net/npm/@glidejs/glide/dist/glide.min.js"></script>
+
+    <link rel="stylesheet" href="{% static 'myapp/css/style.css' %}?v=5.2">
+
+
 
 </head>
 
@@ -21,7 +22,7 @@
             <a href="/" class="logo">OREWA NOVA</a>
             <div class="nav-links">
                 <a href="/">Home</a>
-                <a href="/#genres">Genres</a>
+                <a href="{% url 'genre_list' %}">Genres</a>
                 {% if user.is_staff %}
                 | <a href="{% url 'admin_dashboard' %}">Admin Panel</a>
                 {% endif %}

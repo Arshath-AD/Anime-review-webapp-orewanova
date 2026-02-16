@@ -1,0 +1,97 @@
+{% extends "myapp/base.html" %}
+
+{% block content %}
+<div class="container fade-in page-spacer">
+
+    <div class="search-wrapper">
+        <input type="text" name="q" id="manage-search" placeholder="Search anime..." autocomplete="off">
+    </div>
+
+
+
+    <div class="mb-4">
+        <a href="{% url 'admin_dashboard' %}" class="btn" style="padding: 0.5rem 1rem; font-size: 0.9rem;">← Back to
+            Dashboard</a>
+    </div>
+
+    <div class="admin-header" style="text-align: center; margin-bottom: 3rem;">
+        <h1 class="section-title" style="font-size: 3rem; text-shadow: 0 0 20px rgba(57, 255, 20, 0.4);">
+            Content Management
+        </h1>
+        <p style="color: var(--text-muted); font-size: 1.1rem; letter-spacing: 1px;">
+            MANAGE ALL ANIME ENTRIES
+        </p>
+    </div>
+
+    <div class="admin-actions">
+        <a href="{% url 'add_anime' %}" class="btn hero-btn"
+            style="width: 100%; text-align: center; font-size: 1.2rem;">
+            + Add New Anime
+        </a>
+    </div>
+
+    <div class="card-grid">
+        {% for a in anime_list %}
+        <div class="card">
+            <div class="card-img-wrapper" style="position: relative; overflow: hidden; height: 200px;">
+                <img src="/media/{{ a.images.landscape }}" class="card-img">
+                <div class="card-overlay"
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); pointer-events: none;">
+                </div>
+            </div>
+
+            <div class="card-content">
+                <h3 class="card-title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    {{ a.title }}
+                </h3>
+                <div style="display: flex; gap: 10px; margin-top: 1rem;">
+                    <a href="{% url 'edit_anime' a.id %}" class="btn"
+                        style="flex: 1; text-align: center; font-size: 0.9rem;">Edit</a>
+                    <a href="{% url 'delete_anime' a.id %}" class="btn btn-danger"
+                        style="flex: 1; text-align: center; font-size: 0.9rem;">
+                        Delete
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div style="height: 100px;"></div> <!-- Explicit Spacer -->
+
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const input = document.getElementById("manage-search");
+        if (!input) return;
+
+        input.addEventListener("input", function () {
+
+            const query = this.value.toLowerCase().trim();
+            const cards = document.querySelectorAll(".card");
+
+            cards.forEach(card => {
+
+                const titleElement = card.querySelector(".card-title");
+                if (!titleElement) return;
+
+                const title = titleElement.innerText.toLowerCase();
+
+                if (title.includes(query)) {
+                    card.style.display = "";
+                } else {
+                    card.style.display = "none";
+                }
+
+            });
+
+        });
+
+    });
+</script>
+{% endblock %}
