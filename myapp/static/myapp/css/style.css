@@ -1806,85 +1806,7 @@ input[type="file"]::file-selector-button:hover {
 }
 
 /* search bar */
-.search-bar {
-    display: flex;
-    gap: 15px;
-    margin: 2rem auto;
-    max-width: 600px;
-    width: 100%;
-    /* Ensure it takes full available width */
-    position: relative;
-    z-index: 10;
-}
 
-.search-bar input {
-    flex-grow: 1;
-    /* Force grow */
-    width: 100%;
-    /* fallback */
-    min-width: 0;
-    /* Allow shrinking if needed */
-    padding: 1rem 1.5rem;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 50px;
-    color: white;
-    font-size: 1rem;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-.search-bar input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 0 20px rgba(57, 255, 20, 0.3);
-    transform: scale(1.02);
-}
-
-.search-bar .btn {
-    flex-shrink: 0;
-    /* Prevent shrinking */
-    width: auto;
-    padding: 0 2rem;
-    background: var(--primary-color);
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    color: black;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(57, 255, 20, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    white-space: nowrap;
-}
-
-.search-bar .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(57, 255, 20, 0.6);
-}
-
-/* Better contrast on neon green */
-font-weight: bold;
-text-transform: uppercase;
-letter-spacing: 1px;
-transition: all 0.3s ease;
-box-shadow: 0 4px 15px rgba(57, 255, 20, 0.4);
-display: flex;
-align-items: center;
-justify-content: center;
-}
-
-.search-bar .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(57, 255, 20, 0.6);
-}
 
 
 
@@ -1893,9 +1815,8 @@ justify-content: center;
 .search-wrapper {
     position: relative;
     max-width: 450px;
-    /* Reduced width */
-    margin: 2rem 0;
-    /* Aligned left as requested earlier */
+    margin: 2rem auto;
+    /* Back to Center */
     z-index: 100;
 }
 
