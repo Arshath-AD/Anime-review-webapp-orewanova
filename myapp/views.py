@@ -1,6 +1,7 @@
 import os
 from django.conf import settings
 from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from bson import ObjectId
 from .mongo import anime_collection, genre_collection, activity_collection, admin_activity_collection, ratings_collection, comments_collection
@@ -295,6 +296,56 @@ def delete_anime(request, anime_id):
     })
 
     return redirect("admin_anime_list")
+
+@staff_member_required
+def manage_users(request):
+    query = request.GET.get("q", "")
+    
+    users = User.objects.all().order_by("-date_joined")
+
+    if query:
+        users = users.filter(
+            username__icontains=query
+        ) | users.filter(
+            email__icontains=query
+        )
+
+    return render(request, "myapp/admin/manage_users.html", {
+        "users": users,
+        "query": query
+    })
+
+
+@staff_member_required
+def toggle_admin(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+
+    if user == request.user:
+        messages.error(request, "You cannot modify your own admin status.")
+        return redirect("manage_users")
+
+    user.is_staff = not user.is_staff
+    user.save()
+
+    messages.success(request, f"{user.username} admin status updated.")
+    return redirect("manage_users")
+
+
+@staff_member_required
+def delete_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+
+    if user == request.user:
+        messages.error(request, "You cannot delete yourself.")
+        return redirect("manage_users")
+
+    if user.is_superuser:
+        messages.error(request, "You cannot delete a superuser.")
+        return redirect("manage_users")
+
+    user.delete()
+    messages.success(request, "User deleted successfully.")
+    return redirect("manage_users")
 
 
 #auth & authentication

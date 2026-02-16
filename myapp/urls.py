@@ -24,5 +24,8 @@ urlpatterns = [
     path("admin-panel/anime/edit/<str:anime_id>/", views.edit_anime, name="edit_anime"),
     path("admin-panel/anime/delete/<str:anime_id>/", views.delete_anime, name="delete_anime"),
     path("admin-panel/manage_content/", views.manage_content, name="manage_content"),
+    path("admin-panel/users/", views.manage_users, name="manage_users"),
+    path("admin-panel/users/toggle/<int:user_id>/", views.toggle_admin, name="toggle_admin"),
+    path("admin-panel/users/delete/<int:user_id>/", views.delete_user, name="delete_user"),
 
 ]

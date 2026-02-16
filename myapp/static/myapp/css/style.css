@@ -1927,3 +1927,48 @@ input[type="file"]::file-selector-button:hover {
 .search-dropdown::-webkit-scrollbar-thumb:hover {
     background: var(--primary-color);
 }
+
+/* === Manage Users Page === */
+.user-role {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+}
+
+.user-role.admin {
+    color: var(--primary-color);
+}
+
+.user-role.regular {
+    color: var(--text-muted);
+}
+
+.user-joined {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+}
+
+.user-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.user-actions .btn {
+    flex: 1;
+    text-align: center;
+    font-size: 0.9rem;
+    padding: 0.6rem;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem;
+    color: var(--text-muted);
+    font-style: italic;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 12px;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+}

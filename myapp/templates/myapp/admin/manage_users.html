@@ -1,0 +1,56 @@
+{% extends "myapp/base.html" %}
+
+{% block content %}
+<div class="container fade-in page-spacer">
+
+    <form method="get" class="search-wrapper" style="margin-bottom: 3rem;">
+        <input type="text" name="q" placeholder="Search users..." value="{{ query }}">
+        <button type="submit" class="btn">Search</button>
+    </form>
+
+
+    <div class="admin-header text-center mb-5">
+        <h1 class="section-title">Manage Users</h1>
+        <p style="color: var(--text-muted);">User accounts and permissions</p>
+    </div>
+
+    <div class="card-grid">
+        {% for user in users %}
+        <div class="card">
+            <div class="card-content" style="display: flex; flex-direction: column; height: 100%;">
+                <h3 class="card-title">{{ user.username }}</h3>
+                <p style="color: #ccc; margin-bottom: 0.5rem;">{{ user.email }}</p>
+
+                <p class="user-role {% if user.is_staff %}admin{% else %}regular{% endif %}">
+                    {% if user.is_staff %}
+                    Admin
+                    {% else %}
+                    Regular User
+                    {% endif %}
+                </p>
+
+                <p class="user-joined">
+                    Joined: {{ user.date_joined|date:"M d, Y" }}
+                </p>
+
+                <div class="user-actions">
+                    <a href="{% url 'toggle_admin' user.id %}" class="btn">
+                        {% if user.is_staff %}Demote{% else %}Promote{% endif %}
+                    </a>
+
+                    <a href="{% url 'delete_user' user.id %}" class="btn btn-danger"
+                        onclick="return confirm('Are you sure you want to delete this user?');">
+                        Delete
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="empty-state">
+            No users found matching your search.
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}
