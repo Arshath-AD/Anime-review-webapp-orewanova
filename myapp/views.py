@@ -383,6 +383,11 @@ def profile(request):
     if request.method == "POST":
         image = request.FILES.get("image")
         if image:
+            # Delete old image from storage if it exists and is not the default
+            if profile.image and profile.image.name != 'profiles/default.png':
+                if default_storage.exists(profile.image.name):
+                    default_storage.delete(profile.image.name)
+            
             profile.image = image
             profile.save()
         return redirect("profile")
@@ -434,7 +439,10 @@ def home(request):
 
     for slug in genre_slugs:
         anime_list = list(
-            anime_collection.find({"genres": slug}).limit(10)
+            anime_collection.aggregate([
+                {"$match": {"genres": slug}},
+                {"$sample": {"size": 10}}
+            ])
         )
 
         for a in anime_list:

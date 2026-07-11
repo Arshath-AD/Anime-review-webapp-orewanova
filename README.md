@@ -1,141 +1,82 @@
-Orewa Nova – Anime Review Web App
+# Orewa Nova – Anime Review Web App
 
-A full-stack anime discovery and review platform built with Django and MongoDB.
+A full-stack anime discovery and review platform built with Django, MongoDB, and Docker.
 
-📌 Overview
+## 📌 Overview
 
 Orewa Nova is a modern anime exploration platform where users can:
+- Browse anime by genre
+- View detailed anime pages with dynamic slide galleries
+- Manage user profiles and avatars
+- Administer content through a custom admin dashboard
 
-Browse anime by genre
+The project utilizes a hybrid database approach: Django (SQLite) handles authentication and user profiles, while MongoDB manages the massive content data (anime details, reviews, genres).
 
-View detailed anime pages
+## 📸 Preview
 
-Explore image galleries with sliders
+<!-- Replace the links below with your actual screenshot paths -->
+![alt text](previewImages/image-1.png)
+![alt text](previewImages/image-2.png)
+![alt text](previewImages/image-5.png)
+![alt text](previewImages/image-3.png)
+![alt text](previewImages/image-4.png)
 
-Manage profiles
+## 🧱 Tech Stack
+| Layer | Technology |
+| --- | --- |
+| **Backend** | Django 5 / Python 3.12 |
+| **Database** | MongoDB (Content) + SQLite (Auth) |
+| **Infrastructure**| Docker & Docker Compose |
+| **Frontend** | HTML5, CSS3, JavaScript |
+| **UI Library** | Glide.js |
+| **Media** | Django File Storage |
 
-Administer content through a custom admin dashboard
+## ✨ Features
+### 🎨 UI & Experience
+- Dark modern theme with responsive card grids
+- Hero image section on anime detail page
+- Portrait & landscape thumbnails
+- Animated hover effects
+- Glide.js image gallery slider
+- Genre-based browsing
 
-The project combines Django (auth + media handling) with MongoDB (content storage).
+### 👤 Authentication & Profiles
+- User Signup/Login
+- Profile Page with Picture Uploads
+- Default Avatar System
+- Staff-based Admin Access
 
-🧱 Tech Stack
-Layer	Technology
-Backend	Django 6
-Database	MongoDB (anime data) + SQLite (auth)
-Frontend	HTML5, CSS3, JavaScript
-UI Library	Glide.js
-Media	Django File Storage
-✨ Features
-🎨 UI & Experience
-
-Dark modern theme
-
-Hero image section on anime detail page
-
-Portrait & landscape thumbnails
-
-Responsive card grid
-
-Animated hover effects
-
-Glide.js image gallery slider
-
-Genre-based browsing
-
-Short summary + detailed description system
-
-👤 Authentication & Profiles
-
-User Signup/Login
-
-Profile Page
-
-Profile Picture Upload
-
-Default Avatar System
-
-Staff-based Admin Access
-
-🛠 Admin Panel
-
-Add / Edit / Delete Anime
-
-Multi-genre support
-
-Upload:
-
-Landscape thumbnail
-
-Portrait thumbnail
-
-Multiple gallery slides
-
-Media auto-organized:
-
-media/
- └── anime/
-      ├── thumbnails/
-      │    ├── landscapes/
-      │    └── portraits/
-      └── slidesimg/<anime_id>/
+### 🛠 Admin & Data Management
+- Custom Admin Dashboard to Add/Edit/Delete Anime
+- Robust, Idempotent MongoDB Database Seeding Pipeline
+- Automated media download and organization (Landscapes, Portraits, Slides)
 
 ## 📁 Project Structure
 
 ```bash
 orewa_nova/
-.
-├── build.sh
+├── Dockerfile                  # Container definition
+├── docker-compose.yml          # Multi-container orchestration (Web & Mongo)
+├── entrypoint.sh               # Docker startup script
 ├── db.sqlite3
 ├── manage.py
-├── media
-│   ├── anime
-│   │   ├── portraits
-│   │   ├── slidesimg
-│   │   ├── thumbnails
-│   │   │   ├── landscapes
-│   │   │   └── portraits
-│   └── profiles  
-├── myapp
-│   ├── admin.py
-│   ├── apps.py
-│   ├── models.py
-│   ├── mongo.py
-│   ├── seed_genre.py
-│   ├── signals.py
-│   ├── static
-│   │   └── myapp
-│   │       └── css
-│   │           └── style.css
-│   ├── templates
-│   │   └── myapp
-│   │       ├── admin
-│   │       │   ├── add_anime.html
-│   │       │   ├── anime_list.html
-│   │       │   ├── dashboard.html
-│   │       │   └── edit_anime.html
-│   │       ├── anime_detail.html
-│   │       ├── auth
-│   │       │   ├── login.html
-│   │       │   └── signup.html
-│   │       ├── base.html
-│   │       ├── genre.html
-│   │       ├── home.html
-│   │       └── profile.html
-│   ├── tests.py
-│   ├── urls.py
-│   └── views.py
-├── orewa_nova
-│   ├── asgi.py
-│   ├── __init__.py
-│   ├── settings.py
-│   ├── urls.py
-│   └── wsgi.py
-├── README.md
-└── requirements.txt
+├── media/                      # Auto-populated by the seed script
+│   ├── anime/
+│   │   ├── slidesimg/
+│   │   └── thumbnails/
+│   │       ├── landscapes/
+│   │       └── portraits/
+│   └── profiles/
+├── myapp/                      # Core Django App (Models, Views, Templates)
+├── orewa_nova/                 # Django Project Settings
+├── requirements.txt
+├── seed.sh                     # Bash wrapper for seeding database
+└── seed_data.py                # 100% automated AniList production seeder
 ```
 
+## ⚙️ Installation & Setup (Dockerized)
 
-## ⚙ Installation
+The easiest and recommended way to run Orewa Nova is via Docker.
 
 ### 1️⃣ Clone the repository
 ```bash
@@ -143,45 +84,31 @@ git clone https://github.com/Arshath-AD/Anime-review-webapp-orewanova.git
 cd Anime-review-webapp-orewanova
 ```
 
-### 2️⃣ Create Virtual Environment
+### 2️⃣ Start the Application
+Run Docker Compose in detached mode to build and start the Django application and MongoDB instance:
 ```bash
-python -m venv env
-source env/bin/activate
+docker compose up --build -d
 ```
 
-### 3️⃣ Install Dependencies
+### 3️⃣ Seed the Database (Optional but Recommended)
+To automatically populate your fresh MongoDB instance with 30 popular anime and dynamically download 300+ official high-resolution images:
 ```bash
-pip install -r requirements.txt
+./seed.sh
 ```
 
-### 4️⃣ Run Migrations
-```bash
-python manage.py migrate
-```
+### 4️⃣ Open the App
+Navigate to:
+**http://127.0.0.1:8000/**
 
-### 5️⃣ Start Server
-```bash
-python manage.py runserver
-```
+---
 
+## 🔄 Current Development Focus
+- ⭐ Rating system
+- 💬 Comments system
+- 🔎 Search functionality
+- 📊 Recommendation improvements
 
-
-Open:
-
-http://127.0.0.1:8000/
-
-🔄 Current Development Focus
-
-⭐ Rating system
-
-💬 Comments system
-
-🔎 Search functionality
-
-📊 Recommendation improvements
-
-👨‍💻 Author
-
-Arshath AD
+## 👨‍💻 Author
+**Arshath AD**
 BSc Computer Science
 Full-Stack Developer
